@@ -1,4 +1,3 @@
-
 /**
  * This class holds the coordinates and dimensions of a rectangle and methods to
  * check if it intersects or has the same coordinates as an other rectangle.
@@ -86,7 +85,29 @@ public class Rectangle {
      * @return true if the rectangle intersects with rec, false if not
      */
     public boolean intersect(Rectangle r2) {
-        return false;
+
+        // Checks for the ways that rectangles don't intersect
+        
+        // Checks if the r2 is being compared to itself
+        if (this == r2) {
+            return false;
+        }
+        
+        // Checks if the one of the rectangles is on top of the other
+        if (this.yCoordinate + this.height <= r2.yCoordinate || r2.yCoordinate
+            + r2.height <= this.yCoordinate) {
+            return false;
+        }
+
+        // Check if one rectangle is to the left of the left edge of the other
+        // rectangle
+        if (this.xCoordinate + this.width <= r2.xCoordinate || r2.xCoordinate
+            + r2.width <= this.xCoordinate) {
+            return false;
+        }
+
+        // if neither conditons are met that means that rectangles intersect
+        return true;
 
     }
 
@@ -100,7 +121,24 @@ public class Rectangle {
      *         not
      */
     public boolean equals(Object rec) {
-        return false;
+
+        // checks if current object and rec is the same
+        if (rec == this) {
+            return true;
+        }
+
+        // checks if rec is null and if it is the same class as the current
+        // object
+        if (rec == null || this.getClass() != rec.getClass()) {
+            return false;
+        }
+
+        // Creates a new Rectangle object and compares the fields.
+        Rectangle rectangle = (Rectangle)rec;
+        return xCoordinate == rectangle.xCoordinate
+            && yCoordinate == rectangle.yCoordinate && width == rectangle.width
+            && height == rectangle.height;
+
     }
 
 
@@ -112,7 +150,12 @@ public class Rectangle {
      *         rectangle
      */
     public String toString() {
-        return null;
+
+        StringBuilder builder = new StringBuilder();
+        builder.append('(').append(xCoordinate).append(", ").append(yCoordinate)
+            .append(", ").append(width).append(", ").append(height).append(')');
+        return builder.toString(); 
+
     }
 
 
@@ -122,6 +165,8 @@ public class Rectangle {
      * @return true if the rectangle has invalid parameters, false if not
      */
     public boolean isInvalid() {
-        return false;
+
+        return xCoordinate < 0 || yCoordinate < 0 || width <= 0 || height <= 0;
+
     }
 }
