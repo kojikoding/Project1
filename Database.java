@@ -48,6 +48,7 @@ public class Database {
         // Delegates the decision mostly to BST, only
         // writing the correct message to the console from
         // that
+        Rectangle r1 = pair.
 
     }
 
@@ -78,7 +79,7 @@ public class Database {
      *            height of the rectangle to be removed
      */
     public void remove(int x, int y, int w, int h) {
-
+        
     }
 
 
