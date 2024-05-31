@@ -166,6 +166,30 @@ public class BST<T extends Comparable<T>> implements Iterable<BSTNode<T>> {
         }
         return rt;
     }
+    
+    /**
+     * This method dumps the structure and values of the BST to console
+     * dump() initiates recursive traversal
+     */
+    public void dump() {
+        dumpRec(root, 0);
+        System.out.println("BST size is: " + size());
+    }
+    /**
+     * Performs in-order traversal
+     * printing node depth and value
+     * 
+     * @param root
+     * @param depth
+     * 
+     */
+    private void dumpRec(BSTNode<T> root, int depth) {
+        if (root == null)
+            return;
+        dumpRec(root.getLeft(), depth + 1);
+        System.out.println("Node has depth " + depth + ", Value " + root.getValue());
+        dumpRec(root.getRight(), depth + 1);
+    }
 
 
     /**

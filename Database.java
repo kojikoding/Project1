@@ -45,11 +45,25 @@ public class Database {
      *            the KVPair to be inserted
      */
     public void insert(KVPair<String, Rectangle> pair) {
-        // Delegates the decision mostly to BST, only
+     // Delegates the decision mostly to BST, only
         // writing the correct message to the console from
         // that
-        Rectangle r1 = pair.
-
+        
+        //set r1 equal to given rectangle in list
+        Rectangle r1 = pair.getValue();
+        //make sure its valid 
+        if (r1.getxCoordinate() < 0 || r1.getyCoordinate() < 0 ||
+            r1.getWidth() <= 0 || r1.getHeight() <= 0 ||
+            r1.getxCoordinate() <=0 || r1.getxCoordinate() + r1.getWidth() > 1024 
+            || r1.getyCoordinate() + r1.getHeight() > 1024) {
+            System.out.println("Rectangle rejected: " + r1);
+        }
+        // send it to BST method insert
+        else {
+            tree.insert(pair);
+            System.out.println("Rectangle accepted: " + r1);
+            
+        }
     }
 
 
