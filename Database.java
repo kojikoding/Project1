@@ -146,7 +146,8 @@ public class Database {
      * will all be delegated to the BST.
      */
     public void dump() {
-
+        System.out.println("BST dump:");
+        tree.dump();
     }
 
 }
