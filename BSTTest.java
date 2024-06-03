@@ -57,15 +57,6 @@ public class BSTTest extends student.TestCase {
     }
 
 
-    /**
-     * Example 3: Test named incorrectly, does not work
-     */
-    public void BSTFailTest() {
-        // Despite this test asserting that false is true, a contradiction, it
-        // does not cause an error in JUnit, this is because the test case is
-        // incorrectly named, not starting with "test___"
-        assertTrue(false);
-    }
 
 
     /**
@@ -76,13 +67,15 @@ public class BSTTest extends student.TestCase {
          * this will not run until you implement some dump method for your BST
          * but you can assert that some text exists in an output of a dump
          * 
-         * bst = new BST<String>();
-         * bst.insert("hello");
-         * 
-         * String[] dumps = bst.dump().split("\n");
-         * assertFuzzyContains("BST dump should have one real node", dumps[1],
-         * "Node has depth", "Value (hello)");
          */
+        
+
+         bst = new BST<String>();
+        bst.insert("hello");
+        
+        String[] dumps = bst.dump().split("\n");
+         assertFuzzyContains("BST dump should have one real node", dumps[1],
+         "Node has depth", "Value (hello)");
     }
 
     // TODO: implement more tests

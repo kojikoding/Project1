@@ -1,4 +1,3 @@
-
 import student.TestCase;
 
 /**
@@ -90,9 +89,9 @@ public class RectangleTest extends TestCase {
      * Tests to check the toString prints the right string
      */
     public void testToString() {
-        String expectedString = "(10, 10, 5, 5)";
+        String expectedString = "10, 10, 5, 5";
         assertEquals(expectedString, r1.toString());
-    }
+    } 
 
 
     // ----------------------------------------------------------
@@ -159,3 +158,4 @@ public class RectangleTest extends TestCase {
     }
 
 }
+

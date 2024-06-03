@@ -1,4 +1,6 @@
 import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Stub for binary search tree class
@@ -22,7 +24,7 @@ public class BST<T extends Comparable<T>> implements Iterable<BSTNode<T>> {
     public BST() {
         root = null;
         size = 0;
-    }
+    } 
 
 
     /**
@@ -46,18 +48,65 @@ public class BST<T extends Comparable<T>> implements Iterable<BSTNode<T>> {
         root = insertHelper(e, root);
         size++;
     }
-    
- // ----------------------------------------------------------
+
+
+    // ----------------------------------------------------------
     /**
      * Remove the specified value from the tree.
      *
      * @param x
      *            the item to remove
+     * @return the value that was removed
      */
-    public void remove(T x)
-    {
-        root = removeHelper(root, x);
+    public T remove(T x) {
+        T temp = findHelper_2(root, x);
+        if (temp != null) {
+            root = removeHelper(root, x);
+            size--;
+        }
+        return temp;
     }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Clears the tree
+     */
+    public void clear() {
+        root = null;
+        size = 0;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Returns the value for the given key
+     * 
+     * @param key
+     *            the value to be find
+     * @return the value
+     */
+    public List<T> find(T key) {
+        List<T> results = new ArrayList<>();
+        findHelper(root, key, results);
+        return results;
+    }
+
+    // ----------------------------------------------------------
+    /**
+     * This method dumps the structure and values of the BST to console
+     * dump() initiates recursive traversal
+     * @return the string containing the dump
+     */
+    public String dump() {
+        StringBuilder output = new StringBuilder("BST dump:\n");
+        dumpRec(root, 0, output);
+        output.append("BST size is: ").append(size()).append("\n");
+        return output.toString();  
+    }
+
+   
+
 
 
     // ----------------------------------------------------------
@@ -84,32 +133,26 @@ public class BST<T extends Comparable<T>> implements Iterable<BSTNode<T>> {
     }
 
 
-    private T findHelper(BSTNode<T> rt, T key) {
+    private void findHelper(BSTNode<T> rt, T key, List<T> results) {
         if (rt == null) {
-            return null;
+            return;
         }
-        if (rt.getValue().compareTo(key) > 0) {
-            return findHelper(rt.getLeft(), key);
+        if (rt.getValue().compareTo(key) == 0) {
+            results.add(rt.getValue());
         }
-        else if (rt.getValue().compareTo(key) == 0) {
-            return rt.getValue();
-        }
-        else {
-            return findHelper(rt.getRight(), key);
-        }
+        findHelper(rt.getLeft(), key, results);
+        findHelper(rt.getRight(), key, results);
     }
 
-
-    private BSTNode<T> deleteMax(BSTNode<T> rt)
-    {
-        if (rt.getRight() == null)
-        {
+ 
+    private BSTNode<T> deleteMax(BSTNode<T> rt) {
+        if (rt.getRight() == null) {
             return rt.getLeft();
         }
         rt.setRight(deleteMax(rt.getRight()));
         return rt;
-        
-    }
+
+    } 
 
 
     /**
@@ -132,63 +175,56 @@ public class BST<T extends Comparable<T>> implements Iterable<BSTNode<T>> {
     }
 
 
-    private BSTNode<T> removeHelper(BSTNode<T> rt, T key)
-    {
-        if (rt == null)
-        {
+    private BSTNode<T> removeHelper(BSTNode<T> rt, T key) {
+        if (rt == null) {
             return null;
         }
-        if(rt.getValue().compareTo(key) > 0)
-        {
-            rt.setLeft(removeHelper(rt.getLeft(), key));
+        if (rt.getValue().compareTo(key) > 0) {
+            rt.setLeft(removeHelper(rt.getLeft(), key)); 
         }
-        else if(rt.getValue().compareTo(key) < 0)
-        {
+        else if (rt.getValue().compareTo(key) < 0) {
             rt.setRight(removeHelper(rt.getRight(), key));
         }
-        else
-        {
-            if(rt.getLeft() == null)
-            {
+        else {
+            if (rt.getLeft() == null) {
                 return rt.getRight();
             }
-            else if(rt.getRight() == null)
-            {
+            else if (rt.getRight() == null) {
                 return rt.getLeft();
             }
-            else
-            {
+            else {
                 BSTNode<T> temp = getMax(rt.getLeft());
                 rt.setValue(temp.getValue());
                 rt.setLeft(deleteMax(rt.getLeft()));
             }
-            
+
         }
         return rt;
     }
-    
-    /**
-     * This method dumps the structure and values of the BST to console
-     * dump() initiates recursive traversal
-     */
-    public void dump() {
-        dumpRec(root, 0);
-        System.out.println("BST size is: " + size());
-    }
-    /**
-     * Performs in-order traversal
-     * printing node depth and value
-     * 
-     * @param root
-     * @param depth
-     * 
-     */
-    private void dumpRec(BSTNode<T> root, int depth) {
-        if (root == null)
-            return;
-        dumpRec(root.getLeft(), depth + 1);
-        System.out.println("Node has depth " + depth + ", Value " + root.getValue());
-        dumpRec(root.getRight(), depth + 1);
+
+
+    private void dumpRec(BSTNode<T> root, int depth, StringBuilder output) {
+        if (root == null) return;
+        dumpRec(root.getLeft(), depth + 1, output);
+        output.append("Node has depth ").append(depth)
+              .append(", Value (").append(root.getValue()).append(")").append("\n");
+        dumpRec(root.getRight(), depth + 1, output);
+    } 
+
+
+    private T findHelper_2(BSTNode<T> rt, T key) {
+        if (rt == null) {
+            return null;
+        }
+        if (rt.getValue().compareTo(key) > 0) {
+            return findHelper_2(rt.getLeft(), key);
+        }
+        else if (rt.getValue().compareTo(key) == 0) {
+            return rt.getValue();
+        }
+        else {
+            return findHelper_2(rt.getRight(), key);
+        } 
     }
 
 

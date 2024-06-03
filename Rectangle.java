@@ -120,7 +120,7 @@ public class Rectangle {
      * @return true if the rectangle has the same coordinates as rec, false if
      *         not
      */
-    public boolean equals(Object rec) {
+    public boolean equals(Object rec) { 
 
         // checks if current object and rec is the same
         if (rec == this) {
@@ -137,7 +137,7 @@ public class Rectangle {
         Rectangle rectangle = (Rectangle)rec;
         return xCoordinate == rectangle.xCoordinate
             && yCoordinate == rectangle.yCoordinate && width == rectangle.width
-            && height == rectangle.height;
+            && height == rectangle.height; 
 
     }
 
@@ -150,11 +150,7 @@ public class Rectangle {
      *         rectangle
      */
     public String toString() {
-
-        StringBuilder builder = new StringBuilder();
-        builder.append('(').append(xCoordinate).append(", ").append(yCoordinate)
-            .append(", ").append(width).append(", ").append(height).append(')');
-        return builder.toString(); 
+        return xCoordinate + ", " + yCoordinate + ", " + width + ", " + height;
 
     }
 
