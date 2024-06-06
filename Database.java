@@ -25,6 +25,7 @@ public class Database {
     // the class.
     // You will need to define an extra Iterator for the intersections method.
     private Iterator<KVPair<String, Rectangle>> itr1;
+    StringBuilder out;
 
     /**
      * The constructor for this class initializes a BST object
@@ -32,6 +33,7 @@ public class Database {
      */
     public Database() {
         tree = new BST<KVPair<String, Rectangle>>();
+         out = new StringBuilder();
     }
 
 
@@ -45,25 +47,41 @@ public class Database {
      *            the KVPair to be inserted
      */
     public void insert(KVPair<String, Rectangle> pair) {
-     // Delegates the decision mostly to BST, only
+        // Delegates the decision mostly to BST, only
         // writing the correct message to the console from
         // that
-        
-        //set r1 equal to given rectangle in list
-        Rectangle r1 = pair.getValue();
-        //make sure its valid 
-        if (r1.getxCoordinate() < 0 || r1.getyCoordinate() < 0 ||
-            r1.getWidth() <= 0 || r1.getHeight() <= 0 ||
-            r1.getxCoordinate() <=0 || r1.getxCoordinate() + r1.getWidth() > 1024 
-            || r1.getyCoordinate() + r1.getHeight() > 1024) {
-            System.out.println("Rectangle rejected: " + r1);
+        Rectangle r1 = pair.getValue(); 
+        String name = pair.getKey();
+     
+       
+        if (!isValidName(name) || r1.isInvalid() || r1.getxCoordinate() + r1.getWidth() > 1024 || r1
+            .getyCoordinate() + r1.getHeight() > 1024) { 
+            
+            out.append("Rectangle rejected: ").append(name).append(" ").append(r1).append("\n");
+            
+           System.out.println("Rectangle rejected: " + name + " " + r1);
         }
         // send it to BST method insert
         else {
             tree.insert(pair);
-            System.out.println("Rectangle accepted: " + r1);
-            
+            out.append("Rectangle accepted: ").append(name).append(" ").append(r1).append("\n");
+            System.out.println("Rectangle accepted: " + name + " "+ r1); 
+ 
         }
+        
+
+    }
+
+
+    /**
+     * Checks if the provided name is valid.
+     * 
+     * @param name
+     *            the name to be checked
+     * @return true if the name is valid, false otherwise
+     */
+    private boolean isValidName(String name) {
+        return name.matches("^[a-zA-Z][a-zA-Z0-9_]*$");
     }
 
 
@@ -75,6 +93,9 @@ public class Database {
      *            the name of the rectangle to be removed
      */
     public void remove(String name) {
+        
+        
+      
 
     }
 
@@ -93,7 +114,7 @@ public class Database {
      *            height of the rectangle to be removed
      */
     public void remove(int x, int y, int w, int h) {
-        
+
     }
 
 
@@ -145,9 +166,21 @@ public class Database {
      * size of the BST and shows all of the contents of the BST. This
      * will all be delegated to the BST.
      */
-    public void dump() {
-        System.out.println("BST dump:");
-        tree.dump();
+    public String dump() {
+        return tree.dump();
+    }
+
+    /**
+     * Returns the BST.
+     * 
+     * @return the BST object
+     */
+    public BST<KVPair<String, Rectangle>> getTree() {
+        return tree;
+    }
+    
+    public String getOutput() {
+        return out.toString().trim();
     }
 
 }

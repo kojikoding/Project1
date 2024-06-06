@@ -7,7 +7,7 @@
  * @author CS Staff
  * 
  * @version 2024-05-22
- * @param <K>
+ * @param <K> 
  *            Key to be used
  * @param <V>
  *            Value to be associated with the key
@@ -47,6 +47,7 @@ public class KVPair<K extends Comparable<K>, V>
     public K getKey() {
         return key;
     }
+   
 
 
     /**
@@ -65,7 +66,7 @@ public class KVPair<K extends Comparable<K>, V>
      * @return A human readable string representing the KVPair object
      */
     public String toString() {
-        return String.format("(%s, %s)", this.key, this.value);
+        return key + ", " + value;
     }
 
 
@@ -74,11 +75,10 @@ public class KVPair<K extends Comparable<K>, V>
      * This will be used to easily compare two KVPair objects.
      *
      * @param o
-     * @return
+     * @return true if two keys are equal false otherwise
      */
     @Override
     public int compareTo(KVPair<K, V> o) {
-        // TODO Auto-generated method stub
-        return 0;
+        return this.key.compareTo(o.key); 
     }
 }

@@ -33,7 +33,7 @@ public class RectangleDB {
         }
 
         Database rectDB = new Database();
-        CommandProcessor cmder = new CommandProcessor(rectDB);
+        CommandProcessor cmder = new CommandProcessor(rectDB); 
 
         // The following pseudocode walks through a possible design for an
         // entrypoint for your rectangledb
@@ -50,5 +50,17 @@ public class RectangleDB {
 
         // catch the exception if the file cannot be found
         // and output the correct information to the console
+        
+    
+        File file = new File(args[0]);
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String command = scanner.nextLine();
+                cmder.processor(command);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + args[0]);
+        }
     }
+    
 }

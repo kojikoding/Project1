@@ -53,51 +53,102 @@ public class CommandProcessor {
         // parameters by converting the string integers into
         // their Integer equivalent, trimming the whitespace
         if (command.equals("insert")) {
-            // Calls insert
+
+           
+            String name = arr[1];
+            int x = Integer.parseInt(arr[2]);
+            int y = Integer.parseInt(arr[3]);
+            int w = Integer.parseInt(arr[4]);
+            int h = Integer.parseInt(arr[5]);
+
+            Rectangle rect = new Rectangle(x, y, w, h);
+            KVPair<String, Rectangle> pair = new KVPair<>(name, rect);
+            rectDB.insert(pair);
+
         }
+
         // calls the appropriate remove method based on the
         // number of white space delimited strings in the line
         else if (command.equals("remove")) {
-            // checks the number of white space delimited strings in the line
-            int numParam = arr.length - 1;
+            // checks the number of white space delimited strings in the
+            // line
+            int numParam = arr.length - 1; 
             if (numParam == 1) {
-                // Calls remove by name
+                String name = arr[1]; 
+                rectDB.remove(name);
+                
+                
 
             }
             else if (numParam == 4) {
                 // Calls remove by coordinate, converting string
                 // integers into their Integer equivalent minus whitespace
+                int x = Integer.parseInt(arr[1]);
+                int y = Integer.parseInt(arr[2]);
+                int w = Integer.parseInt(arr[3]);
+                int h = Integer.parseInt(arr[4]);
 
+                Rectangle rect = new Rectangle(x, y, w, h);
+                if (!rect.isInvalid()) {
+                    rectDB.remove(x, y, w, h);
+                }
+                else {
+                    System.out.println("Rectangle rejected: " + rect);
+                }
+            }
+            else {
+                System.out.println("Invalid parameters.");
             }
 
         }
         else if (command.equals("regionsearch")) {
-            // calls the regionsearch method for a set of coordinates
-            // the string integers in the line will be trimmed of whitespace
+            if (arr.length == 5) {
+                int x = Integer.parseInt(arr[1]);
+                int y = Integer.parseInt(arr[2]);
+                int w = Integer.parseInt(arr[3]);
+                int h = Integer.parseInt(arr[4]); 
 
+                Rectangle rect = new Rectangle(x, y, w, h);
+                if (!rect.isInvalid()) {
+                    rectDB.regionsearch(x, y, w, h);
+                }
+                else {
+                    System.out.println("Rectangle rejected: " + rect);
+                }
+            }
+            else {
+                System.out.println("Invalid parameters.");
+            }
         }
-        else if (command.equals("intersections")) {
-            // calls the intersections method, no parameters to be passed
-            // (see the intersections JavaDoc in the Database class for more
-            // information)
+        else if (command.equals("intersections")) { 
+            rectDB.intersections();
 
         }
         else if (command.equals("search")) {
-            // calls the search method for a name of object
+            if (arr.length == 2) {
+                String name = arr[1];
+                rectDB.search(name);
+            }
+            else {
+                System.out.println("Invalid parameters.");
+            } 
 
-        }
+        } 
         else if (command.equals("dump")) {
-            // calls the dump method for the database, takes no parameters
-            // (see the dump() JavaDoc in the Database class for more
-            // information)
+            rectDB.dump();
 
         }
         else {
             // the first white space delimited string in the line is not
             // one of the commands which can manipulate the database,
             // a message will be written to the console
-            System.out.println("Unrecognized command.");
+            System.out.println("Unrecognized command."); 
         }
+    }
+    
+    public String getOutput() 
+    {
+        return rectDB.getOutput();
     }
 
 }
