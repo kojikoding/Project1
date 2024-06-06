@@ -82,7 +82,6 @@ public class BSTTest extends student.TestCase {
         assertFuzzyContains("BST dump should contain root node", dumpOutput, "Node has depth 0", "Value hello");
     }
 
-<<<<<<< HEAD
     /**
      * Test inserting multiple elements into the BST
      */
@@ -241,14 +240,11 @@ public class BSTTest extends student.TestCase {
         assertEquals("Iterator next should return 'world'", "world", iterator.next().getValue());
         assertFalse("Iterator should not have next", iterator.hasNext());
     }
-=======
->>>>>>> branch 'main' of git@github.com:kojikoding/Project1.git
 
 
     /**
      * Test inserting elements in descending order
      */
-<<<<<<< HEAD
     public void testInsertDescending() {
         bst.insert("z");
         bst.insert("y");
@@ -259,22 +255,6 @@ public class BSTTest extends student.TestCase {
         assertFuzzyContains("BST dump should contain root node", dumpOutput, "Node has depth 0", "Value z");
         assertFuzzyContains("BST dump should contain left child", dumpOutput, "Node has depth 1", "Value y");
         assertFuzzyContains("BST dump should contain left grandchild", dumpOutput, "Node has depth 2", "Value x");
-=======
-    public void testFuzzy() {
-        /*
-         * this will not run until you implement some dump method for your BST
-         * but you can assert that some text exists in an output of a dump
-         * 
-         */
-        
-
-         bst = new BST<String>();
-        bst.insert("hello");
-        
-        String[] dumps = bst.dump().split("\n");
-         assertFuzzyContains("BST dump should have one real node", dumps[1],
-         "Node has depth", "Value (hello)");
->>>>>>> branch 'main' of git@github.com:kojikoding/Project1.git
     }
 
     /**
