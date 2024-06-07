@@ -3,7 +3,21 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
- * < MUST add honor pledge here >
+ * // On my honor:
+ * // - I have not used source code obtained from another student,
+ * // or any other unauthorized source, either modified or unmodified.
+ * // - All source code and documentation used in my program is
+ * // either my original work, or was derived by me from the
+ * // source code published in the textbook for this course.
+ * // - I have not discussed coding details about this project with
+ * // anyone other than the instructor, ACM/UPE tutors or the TAs assigned
+ * // to this course. I understand that I may discuss the concepts
+ * // of this program with other students, and that another student
+ * // may help me debug my program so long as neither of us writes
+ * // anything during the discussion or modifies any computer file
+ * // during the discussion. I have violated neither the spirit nor
+ * // letter of this restriction.
+ * 
  */
 
 /**
@@ -33,7 +47,7 @@ public class RectangleDB {
         }
 
         Database rectDB = new Database();
-        CommandProcessor cmder = new CommandProcessor(rectDB); 
+        CommandProcessor cmder = new CommandProcessor(rectDB);
 
         // The following pseudocode walks through a possible design for an
         // entrypoint for your rectangledb
@@ -50,17 +64,31 @@ public class RectangleDB {
 
         // catch the exception if the file cannot be found
         // and output the correct information to the console
-        
-    
-        File file = new File(args[0]);
+
+        File file = new File(args[0]); 
         try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNextLine()) {
-                String command = scanner.nextLine();
-                cmder.processor(command);
+                String command = scanner.nextLine().trim();
+                
+                while (command.isEmpty() && scanner.hasNextLine()) {
+                    command = scanner.nextLine().trim();
+                }
+                
+                if (!command.isEmpty()) {
+                    try {
+                        cmder.processor(command);
+                    }
+                    catch (Exception e) {
+                        System.out.println("Error processing command: "
+                            + command);
+                        e.printStackTrace(); 
+                    }
+                }
             }
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             System.out.println("File not found: " + args[0]);
         }
     }
-    
+
 }

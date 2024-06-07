@@ -151,7 +151,7 @@ public class Rectangle {
      */
     public String toString() {
         return xCoordinate + ", " + yCoordinate + ", " + width + ", " + height;
-
+ 
     }
 
 

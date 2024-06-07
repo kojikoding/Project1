@@ -1,14 +1,14 @@
 import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Stack;
 
 /**
  * Stub for binary search tree class
  * We use generics here because we want this BST to be able to hold more than
  * just Rectangles (or KVPairs)
  * 
- * @author {Patrick Hardy}
- * @version June 6, 2024
+ * @author {Your Name Here}
  * @param <T>
  *            the generic type; extends Comparable
  */
@@ -27,7 +27,10 @@ public class BST<T extends Comparable<T>> implements Iterable<BSTNode<T>> {
         size = 0;
     }
 
-
+    public BSTNode<T> getRoot()
+    {
+        return root;
+    }
     /**
      * Size of the tree
      *
@@ -36,6 +39,8 @@ public class BST<T extends Comparable<T>> implements Iterable<BSTNode<T>> {
     public int size() {
         return size;
     }
+
+    // ----------------------------------------------------------
 
 
     // ----------------------------------------------------------
@@ -46,13 +51,75 @@ public class BST<T extends Comparable<T>> implements Iterable<BSTNode<T>> {
      *            the value to be inserted
      */
     public void insert(T e) {
-        if (e == null) {
-            throw new IllegalArgumentException("Cannot insert null value into BST!");
-        }
         root = insertHelper(e, root);
         size++;
     }
-    
+
+
+    // ----------------------------------------------------------
+    /**
+     * Remove the specified value from the tree.
+     *
+     * @param x
+     *            the name of item to be removed
+     * @return the item removed
+     * 
+     */
+    public T remove(T x) {
+        T temp = findHelper_2(root, x);
+        if (temp != null) {
+            root = removeHelper(root, x);
+            size--;
+        }
+        return temp;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * Returns the value for the given key
+     * 
+     * @param key
+     *            the value to be find
+     * @return the value
+     */
+    public List<T> find(T key) {
+        List<T> results = new ArrayList<>();
+        findHelper(root, key, results);
+        return results;
+    }
+
+
+    // ----------------------------------------------------------
+    /**
+     * This method dumps the structure and values of the BST to console
+     * dump() initiates recursive traversal
+     * 
+     * @return the string containing the dump
+     */
+
+    public String dump() {
+        StringBuilder output = new StringBuilder("BST dump:\n");
+        dumpRec(root, 0, output);
+        output.append("BST size is: ").append(size()).append("\n");
+        System.out.println(output);
+        return output.toString();
+
+    }
+
+
+    private void dumpRec(BSTNode<T> root, int depth, StringBuilder output) {
+        if (root == null)
+            return;
+        dumpRec(root.getLeft(), depth + 1, output);
+        output.append("Node has depth ").append(depth).append(", Value (")
+            .append(root.getValue()).append(")").append("\n");
+        dumpRec(root.getRight(), depth + 1, output);
+
+    } 
+
+
+    // ----------------------------------------------------------
     /**
      * Private method to insert a value into a subtree.
      *
@@ -74,87 +141,20 @@ public class BST<T extends Comparable<T>> implements Iterable<BSTNode<T>> {
         }
         return node;
     }
-    
- // ----------------------------------------------------------
-    /**
-     * Remove the specified value from the tree.
-     *
-     * @param x
-     *            the item to remove
-     */
-    public void remove(T x) {
-        boolean[] isRemoved = new boolean[1];
-        root = removeHelper(root, x, isRemoved);
-        if (isRemoved[0]) {
-            size--;
-        }
-    }
-    /**
-     * Private method to remove a value from a subtree.
-     *
-     * @param rt the root of the subtree.
-     * @param key the item to remove.
-     * @return the new root of the subtree.
-     */
-    private BSTNode<T> removeHelper(BSTNode<T> rt, T key, boolean[] isRemoved) {
+
+
+    private void findHelper(BSTNode<T> rt, T key, List<T> results) {
         if (rt == null) {
-            return null;
+            return;
         }
-        if (rt.getValue().compareTo(key) > 0) {
-            rt.setLeft(removeHelper(rt.getLeft(), key, isRemoved));
-        } else if (rt.getValue().compareTo(key) < 0) {
-            rt.setRight(removeHelper(rt.getRight(), key, isRemoved));
-        } else {
-            isRemoved[0] = true;
-            if (rt.getLeft() == null) {
-                return rt.getRight();
-            } else if (rt.getRight() == null) {
-                return rt.getLeft();
-            } else {
-                BSTNode<T> temp = getMax(rt.getLeft());
-                rt.setValue(temp.getValue());
-                rt.setLeft(deleteMax(rt.getLeft()));
-            }
+        if (rt.getValue().compareTo(key) == 0) {
+            results.add(rt.getValue());
         }
-        return rt;
-    }
-    
-    /**
-     * Search for a value in the tree.
-     *
-     * @param key the item to search for
-     * @return the item if found, null otherwise
-     */
-    public T search(T key) {
-        return findHelper(root, key);
-    }
-    
-    /**
-     * Private method to find a value in a subtree.
-     *
-     * @param rt the root of the subtree.
-     * @param key the item to find.
-     * @return the item if found, null otherwise
-     */
-    private T findHelper(BSTNode<T> rt, T key) {
-        if (rt == null) {
-            return null;
-        }
-        if (rt.getValue().compareTo(key) > 0) {
-            return findHelper(rt.getLeft(), key);
-        } else if (rt.getValue().compareTo(key) == 0) {
-            return rt.getValue();
-        } else {
-            return findHelper(rt.getRight(), key);
-        }
+        findHelper(rt.getLeft(), key, results);
+        findHelper(rt.getRight(), key, results);
     }
 
-    /**
-     * Private method to delete the maximum value in a subtree.
-     *
-     * @param rt the root of the subtree.
-     * @return the new root of the subtree.
-     */
+
     private BSTNode<T> deleteMax(BSTNode<T> rt) {
         if (rt.getRight() == null) {
             return rt.getLeft();
@@ -164,13 +164,6 @@ public class BST<T extends Comparable<T>> implements Iterable<BSTNode<T>> {
     }
 
 
-    /**
-     * Private method to find the largest value in
-     *
-     * @param node
-     *            root node
-     * @return node containing the largest item.
-     */
     private BSTNode<T> getMax(BSTNode<T> node) {
         if (node == null) {
             return null;
@@ -182,36 +175,48 @@ public class BST<T extends Comparable<T>> implements Iterable<BSTNode<T>> {
             return getMax(node.getRight());
         }
     }
-        
-    /**
-     * This method dumps the structure and values of the BST to console
-     * dump() initiates recursive traversal
-     */
-    public String dump() {
-        //dumpRec(root, 0);
-        //System.out.println("BST size is: " + size());
-        StringBuilder sb = new StringBuilder();
-        dumpRec(root, 0, sb);
-        sb.append("BST size is: ").append(size()).append("\n");
-        String result = sb.toString();
-        System.out.println(result); // Optional: keep printing for debugging
-        return result;
+
+
+    private BSTNode<T> removeHelper(BSTNode<T> rt, T key) {
+        if (rt == null) {
+            return null;
+        }
+        if (rt.getValue().compareTo(key) > 0) {
+            rt.setLeft(removeHelper(rt.getLeft(), key));
+        }
+        else if (rt.getValue().compareTo(key) < 0) {
+            rt.setRight(removeHelper(rt.getRight(), key));
+        }
+        else {
+            if (rt.getLeft() == null) {
+                return rt.getRight();
+            }
+            else if (rt.getRight() == null) {
+                return rt.getLeft();
+            }
+            else {
+                BSTNode<T> temp = getMax(rt.getLeft());
+                rt.setValue(temp.getValue());
+                rt.setLeft(deleteMax(rt.getLeft()));
+            }
+        }
+        return rt;
     }
-    /**
-     * Performs in-order traversal
-     * printing node depth and value
-     * 
-     * @param root
-     * @param depth
-     * 
-     */
-    private void dumpRec(BSTNode<T> root, int depth, StringBuilder sb) {
-        if (root == null)
-            return;
-        dumpRec(root.getLeft(), depth + 1, sb);
-        //System.out.println("Node has depth " + depth + ", Value " + root.getValue());
-        sb.append("Node has depth ").append(depth).append(", Value ").append(root.getValue()).append("\n");
-        dumpRec(root.getRight(), depth + 1, sb);
+
+
+    private T findHelper_2(BSTNode<T> rt, T key) {
+        if (rt == null) {
+            return null;
+        }
+        if (rt.getValue().compareTo(key) > 0) {
+            return findHelper_2(rt.getLeft(), key);
+        }
+        else if (rt.getValue().compareTo(key) == 0) {
+            return rt.getValue();
+        }
+        else {
+            return findHelper_2(rt.getRight(), key);
+        }
     }
 
 
@@ -222,43 +227,60 @@ public class BST<T extends Comparable<T>> implements Iterable<BSTNode<T>> {
      */
     @Override
     public Iterator<BSTNode<T>> iterator() {
-        return new MyIterator();
+        return new BSTIterator(root);
     }
 
-    private class MyIterator implements Iterator<BSTNode<T>> {
-        private Stack<BSTNode<T>> stack = new Stack<>();
-        private BSTNode<T> current;
+    private class BSTIterator implements Iterator<BSTNode<T>> {
+        private List<BSTNode<T>> nodes;
+        private int index;
 
-        public MyIterator() {
-            current = root;
-            pushLeft(current);
+        public BSTIterator(BSTNode<T> root) {
+            nodes = new ArrayList<>();
+            index = 0;
+            inOrderTraversal(root);
         }
 
-        private void pushLeft(BSTNode<T> node) {
-            while (node != null) {
-                stack.push(node);
-                node = node.getLeft();
-            }
-        }
 
         @Override
         public boolean hasNext() {
-            return !stack.isEmpty();
+            return index < nodes.size();
         }
+
 
         @Override
         public BSTNode<T> next() {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            BSTNode<T> node = stack.pop();
-            if (node.getRight() != null) {
-                pushLeft(node.getRight());
+            return nodes.get(index++);
+
+        }
+
+
+        private void inOrderTraversal(BSTNode<T> node) {
+            if (node != null) {
+                inOrderTraversal(node.getLeft());
+                nodes.add(node);
+                inOrderTraversal(node.getRight());
             }
-            return node;
+        }
+
+    }
+
+    // ----------------------------------------------------------
+    /**
+     * Returns a string representation of the tree in sorted order.
+     * 
+     * @return the string representation of the tree
+     */
+
+    public String toString() {
+        if (root == null) {
+            return "()";
+        }
+        else {
+            return "(" + root.toString() + ")";
         }
     }
+
 }
-
-
-

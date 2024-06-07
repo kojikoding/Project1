@@ -66,7 +66,7 @@ public class KVPair<K extends Comparable<K>, V>
      * @return A human readable string representing the KVPair object
      */
     public String toString() {
-        return key + ", " + value;
+        return key + ", " + value; 
     }
 
 
@@ -79,6 +79,6 @@ public class KVPair<K extends Comparable<K>, V>
      */
     @Override
     public int compareTo(KVPair<K, V> o) {
-        return this.key.compareTo(o.key); 
+        return this.key.compareTo(o.key);  
     }
 }

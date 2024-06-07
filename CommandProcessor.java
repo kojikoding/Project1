@@ -14,6 +14,7 @@ public class CommandProcessor {
     // commands that the command processor
     // feeds to it
     private Database rectDB;
+    private StringBuilder out;
 
     /**
      * The constructor for the command processor requires a database instance to
@@ -25,6 +26,7 @@ public class CommandProcessor {
      */
     public CommandProcessor(Database dataIn) {
         rectDB = dataIn;
+        out = new StringBuilder();
     }
 
 
@@ -44,9 +46,11 @@ public class CommandProcessor {
      *            a single line from the text file
      */
     public void processor(String line) {
+
         // converts the string of the line into an
         // array of its space (" ") delimited elements
-        String[] arr = line.split("\\s{1,}");
+        // String[] arr = line.split("\\s{1,}");
+        String[] arr = line.trim().split("\\s+");
         String command = arr[0]; // the command will be the first of these
                                  // elements
         // calls the insert function and passes the correct
@@ -54,7 +58,6 @@ public class CommandProcessor {
         // their Integer equivalent, trimming the whitespace
         if (command.equals("insert")) {
 
-           
             String name = arr[1];
             int x = Integer.parseInt(arr[2]);
             int y = Integer.parseInt(arr[3]);
@@ -72,15 +75,13 @@ public class CommandProcessor {
         else if (command.equals("remove")) {
             // checks the number of white space delimited strings in the
             // line
-            int numParam = arr.length - 1; 
-            if (numParam == 1) {
-                String name = arr[1]; 
+
+            if (arr.length == 2) {
+                String name = arr[1];
                 rectDB.remove(name);
-                
-                
 
             }
-            else if (numParam == 4) {
+            else {
                 // Calls remove by coordinate, converting string
                 // integers into their Integer equivalent minus whitespace
                 int x = Integer.parseInt(arr[1]);
@@ -88,16 +89,8 @@ public class CommandProcessor {
                 int w = Integer.parseInt(arr[3]);
                 int h = Integer.parseInt(arr[4]);
 
-                Rectangle rect = new Rectangle(x, y, w, h);
-                if (!rect.isInvalid()) {
-                    rectDB.remove(x, y, w, h);
-                }
-                else {
-                    System.out.println("Rectangle rejected: " + rect);
-                }
-            }
-            else {
-                System.out.println("Invalid parameters.");
+                rectDB.remove(x, y, w, h);
+
             }
 
         }
@@ -106,48 +99,42 @@ public class CommandProcessor {
                 int x = Integer.parseInt(arr[1]);
                 int y = Integer.parseInt(arr[2]);
                 int w = Integer.parseInt(arr[3]);
-                int h = Integer.parseInt(arr[4]); 
+                int h = Integer.parseInt(arr[4]);
 
-                Rectangle rect = new Rectangle(x, y, w, h);
-                if (!rect.isInvalid()) {
-                    rectDB.regionsearch(x, y, w, h);
-                }
-                else {
-                    System.out.println("Rectangle rejected: " + rect);
-                }
-            }
-            else {
-                System.out.println("Invalid parameters.");
+                rectDB.regionsearch(x, y, w, h);
+
             }
         }
-        else if (command.equals("intersections")) { 
+        else if (command.equals("intersections")) {
             rectDB.intersections();
 
         }
         else if (command.equals("search")) {
-            if (arr.length == 2) {
-                String name = arr[1];
-                rectDB.search(name);
-            }
-            else {
-                System.out.println("Invalid parameters.");
-            } 
 
-        } 
-        else if (command.equals("dump")) {
-            rectDB.dump();
+            String name = arr[1];
+            rectDB.search(name);
 
         }
-        else {
+        else if (command.equals("dump")) {
+            System.out.println(rectDB.dump());     
+
+        }
+        else { 
             // the first white space delimited string in the line is not
             // one of the commands which can manipulate the database,
             // a message will be written to the console
-            System.out.println("Unrecognized command."); 
+            System.out.println("Unrecognized command.");
         }
     }
-    
-    public String getOutput() 
-    {
+
+
+    // ----------------------------------------------------------
+    /**
+     * Gets the message from insert for testing
+     * 
+     * @return String containing insert info
+     */
+    public String getOutput() {
         return rectDB.getOutput();
     }
 

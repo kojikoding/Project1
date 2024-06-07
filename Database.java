@@ -1,4 +1,4 @@
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * This class is responsible for interfacing between the command processor and
@@ -24,8 +24,9 @@ public class Database {
     // This is an Iterator object over the BST to loop through it from outside
     // the class.
     // You will need to define an extra Iterator for the intersections method.
-    private Iterator<KVPair<String, Rectangle>> itr1;
-    StringBuilder out;
+    // private Iterator<KVPair<String, Rectangle>> itr1;
+    private Iterator<BSTNode<KVPair<String, Rectangle>>> itr1;
+    private StringBuilder out;
 
     /**
      * The constructor for this class initializes a BST object
@@ -33,7 +34,7 @@ public class Database {
      */
     public Database() {
         tree = new BST<KVPair<String, Rectangle>>();
-         out = new StringBuilder();
+        out = new StringBuilder();
     }
 
 
@@ -50,25 +51,25 @@ public class Database {
         // Delegates the decision mostly to BST, only
         // writing the correct message to the console from
         // that
-        Rectangle r1 = pair.getValue(); 
+        Rectangle r1 = pair.getValue();
         String name = pair.getKey();
-     
-       
-        if (!isValidName(name) || r1.isInvalid() || r1.getxCoordinate() + r1.getWidth() > 1024 || r1
-            .getyCoordinate() + r1.getHeight() > 1024) { 
-            
-            out.append("Rectangle rejected: ").append(name).append(" ").append(r1).append("\n");
-            
-           System.out.println("Rectangle rejected: " + name + " " + r1);
+
+        if (!isValidName(name) || r1.isInvalid() || r1.getxCoordinate() + r1
+            .getWidth() > 1024 || r1.getyCoordinate() + r1.getHeight() > 1024) {
+
+            out.append("Rectangle rejected: ").append(name).append(" ").append(
+                r1).append("\n");
+
+            System.out.println("Rectangle rejected: " + name + " " + r1);
         }
         // send it to BST method insert
         else {
             tree.insert(pair);
-            out.append("Rectangle accepted: ").append(name).append(" ").append(r1).append("\n");
-            System.out.println("Rectangle accepted: " + name + " "+ r1); 
- 
+            out.append("Rectangle accepted: ").append(name).append(" ").append(
+                r1).append("\n");
+            System.out.println("Rectangle accepted: " + name + " " + r1);
+
         }
-        
 
     }
 
@@ -91,11 +92,28 @@ public class Database {
      * 
      * @param name
      *            the name of the rectangle to be removed
+     * @return the string containing the info and status of the given rect
      */
-    public void remove(String name) {
-        
-        
-      
+    public String remove(String name) {
+        KVPair<String, Rectangle> searchKey = new KVPair<>(name, null);
+        List<KVPair<String, Rectangle>> result = tree.find(searchKey);
+        StringBuilder out1 = new StringBuilder();
+
+        if (result.isEmpty()) {
+
+            out1.append("Rectangle not found: (" + name + ")");
+            System.out.println(out1.toString());
+
+        }
+        else {
+            KVPair<String, Rectangle> removed = result.get(0);
+            tree.remove(removed);
+
+            out1.append("Rectangle removed: (").append(name).append(", ")
+                .append(removed.getValue()).append(")\n");
+            System.out.println(out1.toString());
+        }
+        return out1.toString();
 
     }
 
@@ -112,8 +130,40 @@ public class Database {
      *            width of the rectangle to be removed
      * @param h
      *            height of the rectangle to be removed
+     * @return the string containing the info and status of the given rect
      */
-    public void remove(int x, int y, int w, int h) {
+    public String remove(int x, int y, int w, int h) {
+        StringBuilder result = new StringBuilder();
+        Rectangle rec = new Rectangle(x, y, w, h);
+        if (rec.isInvalid()) {
+            result.append("Rectangle rejected: (").append(rec).append(")");
+            System.out.println(result.toString());
+            return result.toString();
+        }
+
+        itr1 = tree.iterator();
+        KVPair<String, Rectangle> pairToRemove = null;
+
+        while (itr1.hasNext()) {
+            KVPair<String, Rectangle> outerPair = itr1.next() 
+                .getValue();
+            if (outerPair.getValue().equals(rec)) {
+                pairToRemove = outerPair;
+                break; // Remove the first matching rectangle
+            }
+        }
+
+        if (pairToRemove != null) {
+            tree.remove(pairToRemove);
+            result.append("Rectangle removed: (").append(",").append(rec);
+
+            System.out.println(result.toString());
+        }
+        else {
+            result.append("Rectangle not found: (").append(rec).append(")");
+            System.out.println(result.toString());
+        }
+        return result.toString();
 
     }
 
@@ -155,8 +205,30 @@ public class Database {
      * 
      * @param name
      *            name of the Rectangle to be searched for
+     * @return string that has the info of the rect status and name
      */
-    public void search(String name) {
+    public String search(String name) {
+
+        KVPair<String, Rectangle> searcher = new KVPair<>(name, null);
+        List<KVPair<String, Rectangle>> result = tree.find(searcher);
+        StringBuilder out1 = new StringBuilder();
+
+        if (result.isEmpty()) {
+            System.out.println("Rectangle not found: " + name);
+            return "Rectangle not found: " + name;
+
+        }
+
+        out1.append("Rectangles found matching \"").append(name).append(
+            "\":\n");
+        System.out.println("Rectangle found matching: " + name + "\":\n");
+
+        for (KVPair<String, Rectangle> pair : result) {
+            Rectangle r1 = pair.getValue();
+            out1.append("(").append(name).append(", ").append(r1).append(")\n");
+            System.out.println("(" + name + "," + r1 + ")\n");
+        }
+        return out1.toString().trim();
 
     }
 
@@ -165,20 +237,32 @@ public class Database {
      * Prints out a dump of the BST which includes information about the
      * size of the BST and shows all of the contents of the BST. This
      * will all be delegated to the BST.
+     * 
+     * @return String containing the nodes in the tree
      */
     public String dump() {
-        return tree.dump();
+
+        String h = tree.dump();
+        System.out.println(h);
+        return (h);
     }
 
+// /**
+// * Returns the BST.
+// *
+// * @return the BST object
+// */
+// public BST<KVPair<String, Rectangle>> getTree() {
+// return tree;
+// }
+
+
+    // ----------------------------------------------------------
     /**
-     * Returns the BST.
+     * For insert testing
      * 
-     * @return the BST object
+     * @return returns the messages after insert.
      */
-    public BST<KVPair<String, Rectangle>> getTree() {
-        return tree;
-    }
-    
     public String getOutput() {
         return out.toString().trim();
     }
